@@ -10,7 +10,7 @@ Download and install Unity3D. Create an Individual / Free account.
 
 As time is very limited and there is a lot to learn, we'll aim to do something simple which will cover a few of the main Unity workflows. We'll make a simple mini-game which resembles an infinite runner, where they player most jump over a hurdle.
 
-# Stage 1 - set up environment
+# Stage 1 - Set up environment
 
 This will be the static scene that the gameplay takes place in.
 
@@ -42,7 +42,7 @@ Finally position the camera at one end of the Ground by changing the transform o
 
 ![](Imgs/1-08.jpg)
 
-# Stage 2 - set up the player
+# Stage 2 - Set up the player
 
 We'll create a gameobject that represents the player. It will move forward at a constant speed, and jump when the player presses the spacebar.
 
@@ -200,7 +200,7 @@ Move to the inspector window and tweak the player speed and initial jump velocit
 
 The simplest way to manage this is to make changes in play mode and then write them down, and reapply the changes after stopping.
 
-# Stage 3 - camera behaviour
+# Stage 3 - Camera behaviour
 
 To author the camera behaviour, create a new script on the camera called *PlayerCamera*, and use the following code:
 
@@ -242,7 +242,7 @@ Now that the reference is set, re-enter Play mode and the camera should follow t
 
 
 
-# Stage 4 - set up the hurdle
+# Stage 4 - Set up the hurdle
 
 Now we'll add something for the player to jump over.
 
@@ -273,3 +273,81 @@ public class Obstacle : MonoBehaviour {
 
 This works but is fairly crude. A better approach would be to notify some kind of game logic / manager, which we'll look at setting up next.
 
+
+# Stage 5 - Add some game logic
+
+Now we have a couple of simple game mechanics, our final task will be to add some higher level logic that controls the game state.
+
+An easy path to set this up is the *Singleton* pattern. This is a class that creates a single instance of itself at runtime, and makes this instance available to the rest of the game. This is an easy central point for logic and data to reside. There are example singleton C# implementations that can be used out of the box from google. We'll use a quick bare bones implementation here.
+
+Create a new gameobject called *GameLogic* and create a script of the same name. The following code has a static property called *Instance*, which is a reference to the instance of this class. The *static* keyword means only one instance of this reference will exist in memory, and making it public means any other script can access it, as we'll see shortly. The final piece of the puzzle is to initialise the reference in *Awake()* which is called immediately after the gameobject is instantiated at runtime.
+
+```
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class GameLogic : MonoBehaviour {
+
+    public static GameLogic Instance { get; set; }
+
+    bool _playerAlive = true;
+    public bool PlayerAlive { get { return _playerAlive; } }
+
+    void Awake () {
+        Debug.Assert(Instance == null);
+        Instance = this;
+	}
+	
+    public void ObstacleGotHit()
+    {
+        _playerAlive = false;
+    }
+}
+```
+
+The code also has a function *ObstacleGotHit* that updates the *_playerAlive* state to false to record that the player hit a hurdle and died.
+
+We can now update our *Obstacle* script - if a player hits the obstacle, it can grab the reference to the *GameLogic* object and notify it:
+
+```
+public class Obstacle : MonoBehaviour {
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.name == "Player")
+        {
+            GameLogic.Instance.ObstacleGotHit();
+        }
+    }
+}
+```
+
+If you Play and let the player hit the obstacle, this will successfully record if the player gets hit. However nothing will happen - the player will continue moving forward. We finally make the *Player* script stop moving upon death by checking this state at the top of the *Update* function:
+
+```
+public class Player : MonoBehaviour
+{
+    // ...snip... 
+
+    void Update ()
+    {
+        if (!GameLogic.Instance.PlayerAlive)
+        {
+            return;
+        }
+	
+        // ...snip...
+    }
+}
+```
+
+An obvious next step would be to lookup how UI is handled in Unity and making UI elements that communicate game state, and toggling visiblity of these in *GameLogic* to message the state to the player.
+
+# Conclusion
+
+We have made something fairly simple in terms of gameplay, but we touched on a number of useful pipelines around creating gameobjects, assets and scripts.
+
+We also added both low level behaviours and some high level game state. We used fairly simple patterns that should get you started in the game jam and scale well enough to a jam-sized project.
+
+The final project is available in this repos, in the /UnityWorkshopGame folder.
