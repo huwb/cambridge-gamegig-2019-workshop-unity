@@ -10,4 +10,4 @@ Download and install Unity3D. Create an Individual / Free account.
 
 This will be the static scene that the gameplay takes place in.
 
-![](imgs/1-00.jpg)
+![](Imgs/1-00.jpg)
