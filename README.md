@@ -190,4 +190,17 @@ public class Player : MonoBehaviour
 }
 ```
 
+With this we should be able to play a basic version other the game. To start the game simulation, press the Play button on the top of the Unity window:
+
+![](Imgs/2-04.jpg)
+
+The *Game* window should appear and the player object should move forward at the set velocity. Pressing spacebar should make the player jump.
+
+Move to the inspector window and tweak the player speed and initial jump velocity to your liking. **However, note that your changes will affect the instance of the game running in play mode, not the settings saved in the level**. For this reason, if stop play mode your settings will be discarded with the game state and it will revert back to what is saved in the level. 
+
+The simplest way to manage this is to make changes in play mode and then write them down, and reapply the changes after stopping.
+
+
+
+
 
