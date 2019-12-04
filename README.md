@@ -22,23 +22,23 @@ We're going to make the following. The brown object is the floor. The yellow obj
 
 Add a cube to the scene for a floor:
 
-![](Imgs/1-00.jpg)
+![](Imgs/1-02.jpg)
 
 Ensure the cube is selected in the *Scene* view, then in the Inspector window, set the GameObject name and transform to something like this. I decided that the top surface of the cube should be at y=0, hence the y scale of 1.0 and y offset of -0.5.
 
-![](Imgs/1-02.jpg)
+![](Imgs/1-04.jpg)
 
 Lets change the colour of the Ground. In the *Project* view, create a new material asset in a Materials folder using the right-click menu:
 
-![](Imgs/1-04.jpg)
+![](Imgs/1-06.jpg)
 
 Select the new material and in the *Inspector*, set the Albedo (colour) to whatever colour you like. Alternatively, if you want to use a texture, drag the texture into the Project view to import it, and then use the picker to the left of the word Albedo to select it.
 
-![](Imgs/1-06.jpg)
+![](Imgs/1-08.jpg)
 
 I found a rotated checkerboard pattern for mine. Finally position the camera at one end of the Ground by changing the transform of *Main Camera* in the *Inspector* window:
 
-![](Imgs/1-08.jpg)
+![](Imgs/1-10.jpg)
 
 # Stage 2 - set up the player
 
@@ -48,17 +48,17 @@ We'll create a gameobject that represents the player. It will move forward at a 
 
 There are assets available from Unity for bipeds. In our example we'll simply use a Capsule as a placeholder object to represent the player. Using fast representations like this is common in gamejams. I created a new Capsule using the menu as shown, and placed it at the shown position in the scene, and gave it a blue colour:
 
-![](Imgs/1-10.jpg)
+![](Imgs/1-12.jpg)
 
 The player motion will come from a rigidbody. A rigidbody is an object which interacts with the physics world and collides with physics collision in the screen (this collision comes from *Collider* components which are added to cubes and capsules by default).
 
 With the player gameobject selected, scroll to the bottom of the *Inspector* window and click the Add Component button, and select Rigidbody as shown:
 
-![](Imgs/1-12.jpg)
+![](Imgs/1-14.jpg)
 
 This will make a new section appear in the *Inspector* window for the rigidbody:
 
-![](Imgs/1-14.jpg)
+![](Imgs/1-16.jpg)
 
 The documentation will have details on what these properties do and we won't go through them in detail here.
 
