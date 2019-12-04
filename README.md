@@ -1,6 +1,14 @@
 # Unity Workshop - Cambridge GameGig 2019
 
-See the slides in the *Slides* folder for introduction.
+This workshop introduces the reader to a number of core workflows in Unity, and strings them together to make a very basic game.
+
+The steps are documented below in this readme.
+
+There are introductory slides in the */Slides* folder.
+
+The final project resides in the */UnityWorkshopGame* folder.
+
+Have fun!
 
 # Setup
 
