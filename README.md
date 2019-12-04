@@ -18,8 +18,6 @@ We're going to make the following. The brown object is the floor. The yellow obj
 
 ![](Imgs/1-00.jpg)
 
-## Breakdown
-
 Add a cube to the scene for a floor:
 
 ![](Imgs/1-02.jpg)
