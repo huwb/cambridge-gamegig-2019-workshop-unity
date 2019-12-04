@@ -79,7 +79,7 @@ You should see a component called *Player (Script)* appear on the Player gameobj
 
 The script should be a simple template that looks follows:
 
-`
+```
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -98,7 +98,7 @@ public class Player : MonoBehaviour
         
     }
 }
-`
+```
 
 The function names *Start* and *Update* are special names. Unity will detect these and call *Start* just before the first time the behaviour starts updating, and will call *Update* every frame. There are many special functions that you can add, see the documentation for more detail: https://docs.unity3d.com/ScriptReference/MonoBehaviour.html
 
