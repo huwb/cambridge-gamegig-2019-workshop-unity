@@ -22,11 +22,13 @@ We're going to make the following. The brown object is the floor. The yellow obj
 
 Add a cube to the scene for a floor:
 
-![](Imgs/1-00.jpg)
-
-Ensure the cube is selected in the *Scene* view, then in the Inspector window, set the GameObject name and transform to something like this. I decided that the top surface of the cube should be at y=0, hence the y scale of 1.0 and y offset of -0.5.
-
 ![](Imgs/1-02.jpg)
+
+Ensure the cube is selected in the *Scene* view, then in the Inspector window, set the GameObject name and transform to something like the following.
+
+![](Imgs/1-03.jpg)
+
+I decided that the top surface of the cube should be at y=0, hence the y scale of 1.0 and y offset of -0.5.
 
 Lets change the colour of the Ground. In the *Project* view, create a new material asset in a Materials folder using the right-click menu:
 
@@ -36,7 +38,7 @@ Select the new material and in the *Inspector*, set the Albedo (colour) to whate
 
 ![](Imgs/1-06.jpg)
 
-I found a rotated checkerboard pattern for mine. Finally position the camera at one end of the Ground by changing the transform of *Main Camera* in the *Inspector* window:
+Finally position the camera at one end of the Ground by changing the transform of *Main Camera* in the *Inspector* window:
 
 ![](Imgs/1-08.jpg)
 
@@ -67,8 +69,125 @@ However a notable option we have selected is the *Is Kinematic* option. This wil
 
 ## Behaviour
 
-Our next task is to make the capsule move.
+Our next task is to make the capsule move. Behaviours are authored through C# classes that inherit from *MonoBehaviour* which is the base class for behaviour scripts.
+
+We're going to add a behaviour for the player, which we'll call simply *Player*.
+
+Select the Player gameobject, scroll to the bottom of the *Inspector*, select Add Component, type the name *Player*, and select *New Script* and confirm.
+
+You should see a component called *Player (Script)* appear on the Player gameobject in the Inspector, with a grayed out Script reference with the script name *Player* in the box. Single click the name of the script and it will highlight the referenced script in the *Project* window. Double click it and it should launch a script editor to view the script.
+
+The script should be a simple template that looks follows:
+
+```
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Player : MonoBehaviour
+{
+    // Start is called before the first frame update
+    void Start()
+    {
+        
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
+}
+```
+
+The function names *Start* and *Update* are special names. Unity will detect these and call *Start* just before the first time the behaviour starts updating, and will call *Update* every frame. There are many special functions that you can add, see the documentation for more detail: https://docs.unity3d.com/ScriptReference/MonoBehaviour.html
 
 
+Let's start by adding some member variables to the top of the class. Add the following public variables:
+
+```
+    [Range(0f, 60f)]
+    public float _speed = 14f;
+
+    public Vector3 _jumpInitialVelocity = Vector3.up * 10f;
+```
+
+Speed will give the forward motion speed of hte character, and jump initial velocity will define the upwards velocity given to the character at the start of the jump.
+
+Save the file and switch back to Unity. Unity will detect the script has changed, and recompile. After recompile the properties should appear in the Inspector:
+
+![](Imgs/2-02.jpg)
+
+Any public variables will be detected by Unity and will be reflected in the inspector. The way they appear can be changed with Attributes - the *Range* attribute sets up the slider, for instance. The values of this data will be saved when you save the scene.
+
+We now add some logic to the player. We add a simple state machine. By default the state is *NotJumping*. It will switch to *Jumping* when the player presses spacebar:
+
+```
+using UnityEngine;
+
+public class Player : MonoBehaviour
+{
+    [Range(0f, 60f)]
+    public float _speed = 60f;
+
+    public Vector3 _jumpInitialVelocity = Vector3.up * 10f;
+
+    // Make an enum for the state
+    enum JumpState
+    {
+        NotJumping,
+        Jumping,
+    }
+    JumpState _jumpState = JumpState.NotJumping;
+
+    // Jump velocity - internal state, not shown in inspector
+    Vector3 _velocity = Vector3.zero;
+
+    void Update ()
+    {
+        transform.position += _speed * Vector3.forward * Time.deltaTime;
+
+        switch(_jumpState)
+        {
+            case JumpState.NotJumping:
+
+                // Detect if player presses spacebar and jump
+                if (Input.GetKeyDown(KeyCode.Space))
+                {
+                    // Switch to jumping state
+
+                    // Write a line to the log
+                    Debug.Log("Started jumping");
+
+                    // Set jump velocity
+                    _velocity = _jumpInitialVelocity;
+
+                    // Change state
+                    _jumpState = JumpState.Jumping;
+                }
+
+                break;
+
+            case JumpState.Jumping:
+                // Move forward by velocity
+                transform.position += _velocity * Time.deltaTime;
+
+                // Apply gravitational force
+                _velocity += Physics.gravity * Time.deltaTime;
+                
+                // Detect if player hits ground and stop jumping
+                if(transform.position.y <= 1f)
+                {
+                    var pos = transform.position;
+                    pos.y = 1f;
+                    transform.position = pos;
+
+                    _jumpState = JumpState.NotJumping;
+                }
+                break;
+        }
+	}
+}
+```
 
 
