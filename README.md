@@ -103,7 +103,91 @@ public class Player : MonoBehaviour
 The function names *Start* and *Update* are special names. Unity will detect these and call *Start* just before the first time the behaviour starts updating, and will call *Update* every frame. There are many special functions that you can add, see the documentation for more detail: https://docs.unity3d.com/ScriptReference/MonoBehaviour.html
 
 
-![](Imgs/1-16.jpg)
+Let's start by adding some member variables to the top of the class. Add the following public variables:
 
+```
+    [Range(0f, 60f)]
+    public float _speed = 14f;
+
+    public Vector3 _jumpInitialVelocity = Vector3.up * 10f;
+```
+
+Speed will give the forward motion speed of hte character, and jump initial velocity will define the upwards velocity given to the character at the start of the jump.
+
+Save the file and switch back to Unity. Unity will detect the script has changed, and recompile. After recompile the properties should appear in the Inspector:
+
+![](Imgs/2-02.jpg)
+
+Any public variables will be detected by Unity and will be reflected in the inspector. The way they appear can be changed with Attributes - the *Range* attribute sets up the slider, for instance. The values of this data will be saved when you save the scene.
+
+We now add some logic to the player. We add a simple state machine. By default the state is *NotJumping*. It will switch to *Jumping* when the player presses spacebar:
+
+```
+using UnityEngine;
+
+public class Player : MonoBehaviour
+{
+    [Range(0f, 60f)]
+    public float _speed = 60f;
+
+    public Vector3 _jumpInitialVelocity = Vector3.up * 10f;
+
+    // Make an enum for the state
+    enum JumpState
+    {
+        NotJumping,
+        Jumping,
+    }
+    JumpState _jumpState = JumpState.NotJumping;
+
+    // Jump velocity - internal state, not shown in inspector
+    Vector3 _velocity = Vector3.zero;
+
+    void Update ()
+    {
+        transform.position += _speed * Vector3.forward * Time.deltaTime;
+
+        switch(_jumpState)
+        {
+            case JumpState.NotJumping:
+
+                // Detect if player presses spacebar and jump
+                if (Input.GetKeyDown(KeyCode.Space))
+                {
+                    // Switch to jumping state
+
+                    // Write a line to the log
+                    Debug.Log("Started jumping");
+
+                    // Set jump velocity
+                    _velocity = _jumpInitialVelocity;
+
+                    // Change state
+                    _jumpState = JumpState.Jumping;
+                }
+
+                break;
+
+            case JumpState.Jumping:
+                // Move forward by velocity
+                transform.position += _velocity * Time.deltaTime;
+
+                // Apply gravitational force
+                _velocity += Physics.gravity * Time.deltaTime;
+                
+                // Detect if player hits ground and stop jumping
+                if(transform.position.y <= 1f)
+                {
+                    var pos = transform.position;
+                    pos.y = 1f;
+                    transform.position = pos;
+
+                    _jumpState = JumpState.NotJumping;
+                }
+                break;
+        }
+	}
+}
+```
 
 
