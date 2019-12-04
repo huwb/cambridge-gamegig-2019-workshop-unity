@@ -1,10 +1,26 @@
 # Unity Workshop - Cambridge GameGig 2019
 
-See the slides in the *Slides* folder for introduction.
+This workshop introduces the reader to a number of core workflows in Unity, and strings them together to make a very basic game.
 
-# Setup
+The steps are documented below in this readme.
 
-Download and install Unity3D. Create an Individual / Free account.
+There are introductory slides in the */Slides* folder.
+
+The final project resides in the */UnityWorkshopGame* folder.
+
+Have fun!
+
+# Prerequisites
+
+## Unity3D
+
+Download and install Unity3D from the website: https://unity3d.com/get-unity/download
+
+Create an Individual / Free account if you don't have one already.
+
+A code editor is required. I usually fallback to using Visual Studio for its advanced coding functionality. But it's a bit heavyweight and some people use other editors like VSCode. The editor can be configured in the Unity Editor Preferences.
+
+An open mind and willingness to learn!
 
 # Plan
 
@@ -17,8 +33,6 @@ This will be the static scene that the gameplay takes place in.
 We're going to make the following. The brown object is the floor. The yellow object is a hurdle.
 
 ![](Imgs/1-00.jpg)
-
-## Breakdown
 
 Add a cube to the scene for a floor:
 
