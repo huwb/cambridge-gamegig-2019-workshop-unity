@@ -348,6 +348,6 @@ An obvious next step would be to lookup how UI is handled in Unity and making UI
 
 We have made something fairly simple in terms of gameplay, but we touched on a number of useful pipelines around creating gameobjects, assets and scripts.
 
-We also added both low level behaviours and some high level game state.
+We also added both low level behaviours and some high level game state. We used fairly simple patterns that should get you started in the game jam and scale well enough to a jam-sized project.
 
 The final project is available in this repos, in the /UnityWorkshopGame folder.
