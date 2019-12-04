@@ -190,7 +190,7 @@ public class Player : MonoBehaviour
 }
 ```
 
-With this we should be able to play a basic version other the game. To start the game simulation, press the Play button on the top of the Unity window:
+With this we should be able to play a basic version other the game (although we haven't set up the camera behaviour yet). To start the game simulation, press the Play button on the top of the Unity window:
 
 ![](Imgs/2-04.jpg)
 
@@ -200,7 +200,76 @@ Move to the inspector window and tweak the player speed and initial jump velocit
 
 The simplest way to manage this is to make changes in play mode and then write them down, and reapply the changes after stopping.
 
+# Stage 3 - camera behaviour
+
+To author the camera behaviour, create a new script on the camera called *PlayerCamera*, and use the following code:
+
+```
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class PlayerCamera : MonoBehaviour {
+
+    public Transform _cameraTarget;
+
+    public float _lerpAmount = 0.1f;
+
+    void Update ()
+    {
+        transform.position = Vector3.Lerp(transform.position, _cameraTarget.position, _lerpAmount);
+    }
+}
+```
+
+This takes a target transform to follow, and will interpolate towards it every frame. This is a simple yet powerful pattern for making a "follow" behaviour.
+
+If we switch back to the inspector and inspect the *Main Camera* gameobject, the *Player Camera* script will now have an input for the *Camera Target*, which wants a reference to a Transform for the camera to follow.
+
+![](Imgs/2-08.jpg)
+
+Every gameobject has a Transform component by default. So we'll create a gameobject for the camera target position and parent it to the Player, so that it moves with the player through the world.
+
+Create a game object that represents the camera target by right clicking in the *Scene* view and selecting *Create Empty*. Rename the new object to *CameraTarget*. Then left click drag it onto the Player gameobject to parent it, and set a translation on the transform of the CameraTarget to up and behind the Player. This image shows the final configuration and transform we used:
+
+![](Imgs/2-10.jpg)
+
+Now that a camera target has been created and parented to the Player, we can provide a reference to this target to the PlayerCamera script so that it knows the transform it should follow. To do so, select the *Main Camera* game object, make sure the *Player Camera* script is visible in the Inspector window, then left-click-drag the *CameraTarget* gameobject onto the *Camera Target* field of the script.
+
+![](Imgs/2-12.jpg)
+
+Now that the reference is set, re-enter Play mode and the camera should follow the capsule.
 
 
 
+# Stage 4 - set up the hurdle
+
+Now we'll add something for the player to jump over.
+
+Add a cube for the hurdle, with a new script called Obstacle. The setup we used for this gameobject is shown in the following:
+
+![](Imgs/2-06.jpg)
+
+For the *Obstacle* script, one possible script would be the following:
+
+```
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Obstacle : MonoBehaviour {
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.name == "Player")
+        {
+            Destroy(other.gameObject);
+        }
+    }
+}
+```
+
+*OnTriggerEnter* will be called by Unity when a collider starts overlapping with the trigger cube. The above checks if the name of the overlapping gameobject is *Player*, and if so destroys the player object.
+
+This works but is fairly crude. A better approach would be to notify some kind of game logic / manager, which we'll look at setting up next.
 
