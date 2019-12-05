@@ -24,13 +24,13 @@ An open mind and willingness to learn!
 
 # Plan
 
-As time is very limited and there is a lot to learn, we'll aim to do something simple which will cover a few of the main Unity workflows. We'll make a simple mini-game which resembles an infinite runner, where they player most jump over a hurdle.
+As time is very limited and there is a lot to learn, we'll aim to do something simple which will cover a few of the main Unity workflows. We'll make a simple mini-game which resembles an infinite runner, where they player must jump over an obstacle without touching it.
 
 # Stage 1 - Set up environment
 
 This will be the static scene that the gameplay takes place in.
 
-We're going to make the following. The brown object is the floor. The yellow object is a hurdle.
+We're going to make the following. The brown object is the floor. The yellow object is an obstacle.
 
 ![](Imgs/1-00.jpg)
 
@@ -78,7 +78,7 @@ This will make a new section appear in the *Inspector* window for the rigidbody:
 
 The documentation will have details on what these properties do and we won't go through them in detail here.
 
-However a notable option we have selected is the *Is Kinematic* option. This will disable the dynamic physics simulation on this object. It won't roll around by itself, or fall under gravity. One might ask why we use a rigidbody component? For one critical reason - our hurdle that the player needs to jump over will be a *Trigger* that will fire an event on overlaps, and this overlap detection is driven through the physics engine. Our player must have a rigidbody attached so that it is registered with the physics engine, without this no overlap will be detected.
+However a notable option we have selected is the *Is Kinematic* option. This will disable the dynamic physics simulation on this object. It won't roll around by itself, or fall under gravity. One might ask why we use a rigidbody component? For one critical reason - our obstacle that the player needs to jump over will be a *Trigger* that will fire an event on overlaps, and this overlap detection is driven through the physics engine. Our player must have a rigidbody attached so that it is registered with the physics engine, without this no overlap will be detected.
 
 
 ## Behaviour
@@ -258,11 +258,11 @@ Now that the reference is set, re-enter Play mode and the camera should follow t
 
 
 
-# Stage 4 - Set up the hurdle
+# Stage 4 - Set up the obstacle
 
 Now we'll add something for the player to jump over.
 
-Add a cube for the hurdle, with a new script called Obstacle. The setup we used for this gameobject is shown in the following. Note that on the *Collider* script the **Is Trigger** option is ticked. This means that other physics objects can overlap with this object, and we'll receive a notification when this happens which we'll use next.
+Add a cube for the obstacle, with a new script called Obstacle. The setup we used for this gameobject is shown in the following. Note that on the *Collider* script the **Is Trigger** option is ticked. This means that other physics objects can overlap with this object, and we'll receive a notification when this happens which we'll use next.
 
 ![](Imgs/2-06.jpg)
 
@@ -284,9 +284,9 @@ public class Obstacle : MonoBehaviour
 }
 ```
 
-*OnTriggerEnter* will be called by Unity when a collider starts overlapping with the trigger cube. The above checks if the name of the overlapping gameobject is *Player*, and if so destroys the player object.
+*OnTriggerEnter* will be called by Unity when a collider starts overlapping with the trigger cube. The above checks if the name of the overlapping gameobject is *Player*, and if so destroys the player object. This works but is fairly crude. A better approach would be to notify some kind of game logic / manager, which we'll look at setting up next.
 
-This works but is fairly crude. A better approach would be to notify some kind of game logic / manager, which we'll look at setting up next.
+Experiment with the obstacle position and scale. You may also copy paste the obstacle to duplicate it.
 
 
 # Stage 5 - Add some game logic
@@ -323,7 +323,7 @@ public class GameLogic : MonoBehaviour
 }
 ```
 
-The code also has a function *ObstacleGotHit* that updates the *_playerAlive* state to false to record that the player hit a hurdle and died.
+The code also has a function *ObstacleGotHit* that updates the *_playerAlive* state to false to record that the player hit a obstacle and died.
 
 We can now update our *Obstacle* script - if a player hits the obstacle, it can grab the reference to the *GameLogic* object and notify it:
 
