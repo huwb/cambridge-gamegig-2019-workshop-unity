@@ -6,7 +6,8 @@ public class Obstacle : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.name == "Player")
+        Debug.Log("hit, name " + other.gameObject.name);
+        if (other.gameObject.name == "Player")
         {
             GameLogic.Instance.ObstacleGotHit();
         }

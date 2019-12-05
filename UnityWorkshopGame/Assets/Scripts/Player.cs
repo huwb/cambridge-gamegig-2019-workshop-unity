@@ -18,11 +18,17 @@ public class Player : MonoBehaviour
     // Jump velocity - internal state, not shown in inspector
     Vector3 _velocity = Vector3.zero;
 
-    void Update ()
+    void Update()
     {
+        if (!GameLogic.Instance.PlayerAlive)
+        {
+            // Player is dead, stop updating
+            return;
+        }
+
         transform.position += _speed * Vector3.forward * Time.deltaTime;
 
-        switch(_jumpState)
+        switch (_jumpState)
         {
             case JumpState.NotJumping:
 
@@ -49,9 +55,9 @@ public class Player : MonoBehaviour
 
                 // Apply gravitational force
                 _velocity += Physics.gravity * Time.deltaTime;
-                
+
                 // Detect if player hits ground and stop jumping
-                if(transform.position.y <= 1f)
+                if (transform.position.y <= 1f)
                 {
                     var pos = transform.position;
                     pos.y = 1f;
@@ -61,5 +67,5 @@ public class Player : MonoBehaviour
                 }
                 break;
         }
-	}
+    }
 }
