@@ -91,7 +91,7 @@ Select the Player gameobject, scroll to the bottom of the *Inspector*, select Ad
 
 You should see a component called *Player (Script)* appear on the Player gameobject in the Inspector, with a grayed out Script reference with the script name *Player* in the box. Single click the name of the script and it will highlight the referenced script in the *Project* window. Double click it and it should launch a script editor to view the script.
 
-The script should be a simple template that looks follows:
+The new script should be based on a simple template that looks follows:
 
 ```
 using System.Collections;
@@ -223,20 +223,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerCamera : MonoBehaviour {
-
+public class PlayerCamera : MonoBehaviour
+{
     public Transform _cameraTarget;
 
     public float _lerpAmount = 0.1f;
 
     void Update ()
     {
-        transform.position = Vector3.Lerp(transform.position, _cameraTarget.position, _lerpAmount);
+        transform.position = Vector3.Lerp(transform.position, _cameraTarget.position, _lerpAmount * 60.0f * Time.deltaTime);
     }
 }
 ```
 
 This takes a target transform to follow, and will interpolate towards it every frame. This is a simple yet powerful pattern for making a "follow" behaviour.
+
+The multiplication by delta time is an important nuance - without this the motion of our camera will depend on the frame rate, and if there are long frames / hitches this will be visible as jitter. Multiplying by a factor of delta time means the actual frame time is compensated and the motion will be smooth.
 
 If we switch back to the inspector and inspect the *Main Camera* gameobject, the *Player Camera* script will now have an input for the *Camera Target*, which wants a reference to a Transform for the camera to follow.
 
@@ -260,22 +262,21 @@ Now that the reference is set, re-enter Play mode and the camera should follow t
 
 Now we'll add something for the player to jump over.
 
-Add a cube for the hurdle, with a new script called Obstacle. The setup we used for this gameobject is shown in the following:
+Add a cube for the hurdle, with a new script called Obstacle. The setup we used for this gameobject is shown in the following. Note that on the *Collider* script the **Is Trigger** option is ticked. This means that other physics objects can overlap with this object, and we'll receive a notification when this happens which we'll use next.
 
 ![](Imgs/2-06.jpg)
 
 For the *Obstacle* script, one possible script would be the following:
 
 ```
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class Obstacle : MonoBehaviour {
-
+public class Obstacle : MonoBehaviour
+{
+    // Will be called when a rigidbody starts overlapping this object
     private void OnTriggerEnter(Collider other)
     {
-        if(other.name == "Player")
+        if (other.gameObject.name == "Player")
         {
             Destroy(other.gameObject);
         }
@@ -301,14 +302,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameLogic : MonoBehaviour {
+public class GameLogic : MonoBehaviour
+{
 
     public static GameLogic Instance { get; set; }
 
     bool _playerAlive = true;
     public bool PlayerAlive { get { return _playerAlive; } }
 
-    void Awake () {
+    void Awake()
+    {
         Debug.Assert(Instance == null);
         Instance = this;
 	}
@@ -356,7 +359,7 @@ public class Player : MonoBehaviour
 }
 ```
 
-An obvious next step would be to lookup how UI is handled in Unity and making UI elements that communicate game state, and toggling visiblity of these in *GameLogic* to message the state to the player.
+An obvious next step would be to add UI to communicate game state to the player. In the example project in the */UnityWorkshopGame* folder of this repos, we have added a simple score mechanism with a UI element, and a UI element that is shown on death. Both are controlled by the GameLogic script.
 
 # Conclusion
 
