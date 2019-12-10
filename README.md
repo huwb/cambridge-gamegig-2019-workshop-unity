@@ -6,6 +6,8 @@ Brought to you by [Electric Square](https://www.electricsquare.com/)
 
 Created and presented by [Huw Bowles](https://twitter.com/hdb1)
 
+# Overview
+
 This workshop introduces the reader to a number of core workflows in Unity, and strings them together to make a very basic game.
 
 The steps are documented below in this readme.
