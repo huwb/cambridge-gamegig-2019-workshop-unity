@@ -12,11 +12,7 @@ Have fun!
 
 # Prerequisites
 
-## Unity3D
-
-Download and install Unity3D from the website: https://unity3d.com/get-unity/download
-
-Create an Individual / Free account if you don't have one already.
+Download and install Unity3D from the website: https://unity3d.com/get-unity/download . Create an Individual / Free account if you don't have one already.
 
 A code editor is required. I usually fallback to using Visual Studio for its advanced coding functionality. But it's a bit heavyweight and some people use other editors like VSCode. The editor can be configured in the Unity Editor Preferences.
 
